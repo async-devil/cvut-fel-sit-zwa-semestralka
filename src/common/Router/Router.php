@@ -4,6 +4,16 @@ declare(strict_types=1);
 
 namespace App;
 
+function console_log($output, $with_script_tags = true)
+{
+  $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) .
+    ');';
+  if ($with_script_tags) {
+    $js_code = '<script>' . $js_code . '</script>';
+  }
+  echo $js_code;
+}
+
 enum Methods: string
 {
   case POST = "POST";
@@ -14,30 +24,26 @@ enum Methods: string
 
 class Router
 {
-  private array $handlers;
+  private const PREFIX = "";
+  private const TRIM_REGEXP = "/^\/+|\/$/m";
 
-  const PREFIX = "";
+  private array $requestURISubPaths = [];
+  private Methods $requestMethod;
 
-  private function removePathPrefix(string $path)
+  private $notFoundHandler;
+
+  private $callback;
+  private bool $isMatched = false;
+  private object $parameters;
+
+  public function __construct()
   {
-    return str_replace(self::PREFIX, "", $path);
+    $this->requestMethod = Methods::from($_SERVER['REQUEST_METHOD']);
+
+    $parsedURI = $this->trimURI(str_replace(self::PREFIX, "", $_SERVER["REQUEST_URI"]));
+    $this->requestURISubPaths = explode("/", $parsedURI);
   }
 
-  private function parsePath(string $path)
-  {
-    $trimmedPath = preg_replace("/^\/+|\/$/gm", "", $path);
-
-    return explode("/", $trimmedPath);
-  }
-
-  private function registerRoute(Methods $method, string $path, callable $handler)
-  {
-    $this->handlers[$method->value . $path] = [
-      "method" => $method,
-      "path" => $this->parsePath($path),
-      "handler" => $handler
-    ];
-  }
 
   public function post(string $path, callable $handler)
   {
@@ -49,33 +55,71 @@ class Router
     return $this->registerRoute(Methods::GET, $path, $handler);
   }
 
-  public function start(): void
+  public function put(string $path, callable $handler)
   {
-    $requestMethod = $_SERVER["REQUEST_METHOD"];
-    $requestPath = parse_url($_SERVER["REQUEST_URI"])["path"];
+    return $this->registerRoute(Methods::PUT, $path, $handler);
+  }
 
-    $parsedRequestPath = $this->parsePath($this->removePathPrefix(($requestPath)));
+  public function delete(string $path, callable $handler)
+  {
+    return $this->registerRoute(Methods::DELETE, $path, $handler);
+  }
 
-    $callback = null;
+  public function notFound(callable $handler)
+  {
+    $this->notFoundHandler = $handler;
+  }
 
-    foreach ($this->handlers as $handler) {
-      global $callback;
+  private function trimURI(string $uri): string
+  {
+    return preg_replace(self::TRIM_REGEXP, "", $uri);
+  }
 
-      if ($requestMethod !== $handler["method"]) continue;
+  private function getParameterValuesFromURI(array $patternURISubPaths, array $requestURISubPaths): object {
+    $parametersDictionary = array();
 
-      $handlerPath = $handler["path"];
-      $handlerSubPathsCount = count($handlerPath);
+    for ($i = 0; $i < count($patternURISubPaths); $i += 1) {
+      $patternSubPath = $patternURISubPaths[$i];
+      $requestSubPath = $requestURISubPaths[$i];
 
-      if (count($parsedRequestPath) !== $handlerSubPathsCount) continue;
+      if (str_starts_with($patternSubPath, ":")) $parametersDictionary[substr($patternSubPath, 1)] = $requestSubPath;
+    }
 
-      for ($i = 0; $i < $handlerSubPathsCount; $i += 1) {
-        $handlerSubPath = $handlerPath[$i];
-        $requestSubPath = $parsedRequestPath[$i];
+    return (object)$parametersDictionary;
+  }
 
-        if (!str_starts_with($handlerSubPath, ":") && $handlerSubPath !== $requestSubPath) break;
+  private function registerRoute(Methods $method, string $path, callable $handler): void
+  {
+    if ($this->isMatched) return;
 
-        if ($i === $handlerSubPathsCount - 1) $callback = $handler["route"];
+    $handlerSubPaths = explode("/", $this->trimURI($path));
+    $handlersSubPathsCount = count($handlerSubPaths);
+
+    if ($method !== $this->requestMethod) return;
+    if ($handlersSubPathsCount !== count($this->requestURISubPaths)) return;
+
+    for ($i = 0; $i < $handlersSubPathsCount; $i += 1) {
+      $handlerSubPath = $handlerSubPaths[$i];
+      $requestSubPath = $this->requestURISubPaths[$i];
+
+      if (!str_starts_with($handlerSubPath, ":") && $handlerSubPath !== $requestSubPath) break;
+
+      if ($i === $handlersSubPathsCount - 1) {
+        $this->callback = $handler;
+        $this->isMatched = true;
+        $this->parameters = $this->getParameterValuesFromURI($handlerSubPaths, $this->requestURISubPaths);
       }
     }
+  }
+
+  public function start()
+  {
+    if (!$this->isMatched) {
+      header("HTTP/1.1 404 Not Found");
+      
+      return call_user_func($this->notFoundHandler, []);
+    }
+
+    return call_user_func($this->callback, $this->parameters);
   }
 }
