@@ -2,29 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Invoice;
+namespace App;
+
+use Exception;
 
 class Response
 {
-  private string $page;
+  private string $viewsDir = __DIR__ . "/../../views";
 
-  public function __construct(private readonly string $templateDir)
+  public function getPage(string $name): string
   {
+    return $this->viewsDir . '/' . $name . '.php';
   }
 
-  public function page(string $name): void
+  public function renderPage(string $name, array $exportParameters = array()): void
   {
-    $this->page = $this->templateDir . '/' . $name . '.php';
-  }
+    $pageToRender = $this->getPage($name);
 
-  public function render(): void
-  {
-    if (empty($this->page)) {
-      return;
-    }
+    if (empty($pageToRender)) throw new Exception("Page not found");
+
     ob_start();
-    include $this->page;
-    $output = ob_get_clean();
-    echo $output;
+
+    extract($exportParameters, EXTR_SKIP);
+    include $pageToRender;
+
+    echo ob_get_clean();
   }
 }

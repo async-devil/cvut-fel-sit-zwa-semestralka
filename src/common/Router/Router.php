@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace App;
 
-function console_log($output, $with_script_tags = true)
-{
-  $js_code = 'console.log(' . json_encode($output, JSON_HEX_TAG) .
-    ');';
-  if ($with_script_tags) {
-    $js_code = '<script>' . $js_code . '</script>';
-  }
-  echo $js_code;
-}
+require_once __DIR__ . "/Request.php";
+require_once __DIR__ . "/Response.php";
+
+use App\Request;
+use App\Response;
 
 enum Methods: string
 {
@@ -34,16 +30,23 @@ class Router
 
   private $callback;
   private bool $isMatched = false;
-  private object $parameters;
+
+  private Request $request;
+  private Response $response;
 
   public function __construct()
   {
+    $this->response = new Response();
+    $this->request = new Request();
+
     $this->requestMethod = Methods::from($_SERVER['REQUEST_METHOD']);
+    $this->request->method = $this->requestMethod;
 
     $parsedURI = $this->trimURI(str_replace(self::PREFIX, "", $_SERVER["REQUEST_URI"]));
+    $this->request->URI = $parsedURI;
+
     $this->requestURISubPaths = explode("/", $parsedURI);
   }
-
 
   public function post(string $path, callable $handler)
   {
@@ -75,7 +78,8 @@ class Router
     return preg_replace(self::TRIM_REGEXP, "", $uri);
   }
 
-  private function getParameterValuesFromURI(array $patternURISubPaths, array $requestURISubPaths): object {
+  private function getParameterValuesFromURI(array $patternURISubPaths, array $requestURISubPaths): object
+  {
     $parametersDictionary = array();
 
     for ($i = 0; $i < count($patternURISubPaths); $i += 1) {
@@ -107,7 +111,8 @@ class Router
       if ($i === $handlersSubPathsCount - 1) {
         $this->callback = $handler;
         $this->isMatched = true;
-        $this->parameters = $this->getParameterValuesFromURI($handlerSubPaths, $this->requestURISubPaths);
+
+        $this->request->parameters = $this->getParameterValuesFromURI($handlerSubPaths, $this->requestURISubPaths);
       }
     }
   }
@@ -116,10 +121,10 @@ class Router
   {
     if (!$this->isMatched) {
       header("HTTP/1.1 404 Not Found");
-      
-      return call_user_func($this->notFoundHandler, []);
+
+      return call_user_func($this->notFoundHandler, $this->request, $this->response);
     }
 
-    return call_user_func($this->callback, $this->parameters);
+    return call_user_func($this->callback, $this->request, $this->response);
   }
 }
