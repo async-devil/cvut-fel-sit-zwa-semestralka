@@ -3,21 +3,23 @@
 declare(strict_types=1);
 
 require_once __DIR__ . "/common/Router/Router.php";
+
+use App\Request;
+use App\Response;
 use App\Router;
 
 $router = new Router();
 
-$router->notFound(function() {
-  echo "Actually not found";
+$router->notFound(function (Request $request, Response $response) {
+  $response->renderPage("404", ["uri" => $request->URI]);
 });
 
-$router->get("/", function () {
-  echo "Home Page";
+$router->get("/", function (Request $request, Response $response) {
+  $response->renderPage("home");
 });
 
-$router->get("/about/:param", function (object $parameters) {
-  echo "About Page";
-  echo $parameters->param;
+$router->get("/about/:parameter", function (Request $request, Response $response) {
+  $response->renderPage("about", ["parameter" => $request->parameters->parameter]);
 });
 
 $router->start();
