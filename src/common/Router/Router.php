@@ -20,6 +20,7 @@ enum Methods: string
 
 class Router
 {
+  private array $env;
   private string $PREFIX;
   private const TRIM_REGEXP = "/^\/+|\/$/m";
 
@@ -36,10 +37,11 @@ class Router
 
   public function __construct()
   {
+    $this->env = parse_ini_file(__DIR__ . "/../../.env");
+    $this->PREFIX = $this->env["PREFIX"] or "";
+
     $this->response = new Response();
     $this->request = new Request();
-
-    $this->PREFIX = getenv("PREFIX") ? getenv("PREFIX") : "";
 
     $this->requestMethod = Methods::from($_SERVER['REQUEST_METHOD']);
     $this->request->method = $this->requestMethod;
