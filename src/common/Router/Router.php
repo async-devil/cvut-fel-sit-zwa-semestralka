@@ -20,7 +20,7 @@ enum Methods: string
 
 class Router
 {
-  private const PREFIX = "";
+  private string $PREFIX;
   private const TRIM_REGEXP = "/^\/+|\/$/m";
 
   private array $requestURISubPaths = [];
@@ -39,10 +39,12 @@ class Router
     $this->response = new Response();
     $this->request = new Request();
 
+    $this->PREFIX = getenv("PREFIX") ? getenv("PREFIX") : "";
+
     $this->requestMethod = Methods::from($_SERVER['REQUEST_METHOD']);
     $this->request->method = $this->requestMethod;
 
-    $parsedURI = $this->trimURI(str_replace(self::PREFIX, "", $_SERVER["REQUEST_URI"]));
+    $parsedURI = $this->trimURI(str_replace($this->PREFIX, "", $_SERVER["REQUEST_URI"]));
     $this->request->URI = $parsedURI;
 
     $this->requestURISubPaths = explode("/", $parsedURI);
