@@ -124,7 +124,7 @@ class Router
   public function start()
   {
     if (!$this->isMatched) {
-      header("HTTP/1.1 404 Not Found");
+      http_response_code(404);
 
       return call_user_func($this->notFoundHandler, $this->request, $this->response);
     }
