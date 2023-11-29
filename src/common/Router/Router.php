@@ -37,8 +37,7 @@ class Router
 
   public function __construct()
   {
-    $this->env = parse_ini_file(__DIR__ . "/../../.env");
-    $this->PREFIX = $this->env["PREFIX"] or "";
+    $this->PREFIX = $GLOBALS["env"]["PREFIX"] or "";
 
     $this->response = new Response();
     $this->request = new Request();

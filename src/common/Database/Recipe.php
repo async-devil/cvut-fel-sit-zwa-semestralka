@@ -16,7 +16,9 @@ class Recipe
   public string $id;
   public string $name;
   public string $description;
+  public string $previewImage;
   public string $source;
+  public array $tags;
   public array $sections;
 
 

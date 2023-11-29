@@ -10,6 +10,9 @@ use App\Response;
 use App\Router;
 use App\Database;
 
+$env = parse_ini_file(__DIR__ . "/.env");
+$PREFIX = $env["PREFIX"] or "";
+
 $database = new Database();
 $router = new Router();
 
