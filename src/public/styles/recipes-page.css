@@ -1,0 +1,71 @@
+main > h1 {
+  text-align: center;
+}
+
+.tags {
+  display: flex;
+  justify-content: space-around;
+
+  padding: 1rem;
+
+  background-color: #ffffff;
+  color: #2a260f;
+}
+
+.tags p {
+  margin: 0;
+
+  font-weight: bold;
+}
+
+.tags ul {
+  display: flex;
+  gap: 1rem;
+
+  padding: 0;
+  margin: 0;
+
+  list-style-type: none;
+}
+
+.tags ul a:hover {
+  text-decoration: underline;
+}
+
+.recipes {
+  max-width: 1000px;
+
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+
+  margin: 1rem auto 0 auto;
+}
+
+.recipes .recipe {
+  position: relative;
+
+  max-width: 400px;
+
+  background-color: #ffffff;
+  color: #2a260f;
+
+  transition: background-color 0.2s ease;
+}
+
+.recipes .recipe:hover {
+  background-color: #ffffffe5;
+}
+
+.recipes .recipe > a {
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+}
+
+.recipes .recipe .wrapper {
+  padding: 1rem 0.5rem;
+}

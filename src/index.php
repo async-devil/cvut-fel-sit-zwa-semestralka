@@ -39,6 +39,18 @@ $router->get("/recipes/:id", function (Request $request, Response $response) {
   }
 });
 
+$router->get("/recipes/catalog/:tag", function (Request $request, Response $response) {
+  global $database;
+
+  $tag = $request->parameters->tag;
+
+  if ($tag === "all") {
+    return $response->renderPage("recipes", ["recipes" => $database->data, "tag" => $tag]);
+  }
+
+  return $response->renderPage("recipes", ["recipes" => $database->getRecipesByTag($tag), "tag" => $tag]);
+});
+
 $router->post("/recipes", function (Request $request, Response $response) {
   global $database;
 

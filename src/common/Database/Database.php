@@ -62,6 +62,15 @@ class Database
     throw new Exception("Not found");
   }
 
+  public function getRecipesByTag(string $tag)
+  {
+    $this->readData();
+
+    return array_filter($this->data, function ($recipe) use ($tag) {
+      return in_array($tag, $recipe["tags"]);
+    });
+  }
+
   public function createRecipe(array $data): Recipe
   {
     $recipe = new Recipe($data, true);
