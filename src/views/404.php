@@ -1,13 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<?php require_once __DIR__ . '/components/head.php'; ?>
+<?php
+
+require_once __DIR__ . "/../common/Router/urlBuilder.php";
+
+use function App\urlBuilder;
+
+require_once __DIR__ . '/components/head.php';
+?>
+
 <title>Page not found</title>
 </head>
 
 <body>
-  <h1>404</h1>
-  <h2>Unfortunately, but page <?= $uri ?> is not found.</h2>
+  <?php require_once __DIR__ . "/components/header.php"; ?>
+  <main>
+    <h1>Page not found</h1>
+  </main>
 </body>
 
 </html>
