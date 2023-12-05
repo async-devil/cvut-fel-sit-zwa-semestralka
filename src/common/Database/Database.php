@@ -67,7 +67,7 @@ class Database
     $this->readData();
 
     return array_filter($this->data, function ($recipe) use ($tag) {
-      return in_array($tag, $recipe["tags"]);
+      return $recipe["tag"] === $tag;
     });
   }
 

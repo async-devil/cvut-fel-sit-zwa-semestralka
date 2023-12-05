@@ -18,7 +18,7 @@ class Recipe
   public string $description;
   public string $previewImage;
   public string $source;
-  public array $tags;
+  public string $tag;
   public array $sections;
 
 
@@ -39,6 +39,8 @@ class Recipe
   {
     Validator::isString($schema->name, "name");
     Validator::isString($schema->description, "description");
+    Validator::isString($schema->previewImage, "previewImage");
     Validator::isString($schema->source, "source");
+    Validator::isString($schema->tag, "tag");
   }
 }
