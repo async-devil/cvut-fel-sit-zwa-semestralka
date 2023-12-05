@@ -1,8 +1,11 @@
 .tags {
+  max-width: 1000px;
+
   display: flex;
   justify-content: space-around;
 
   padding: 1rem;
+  margin: 0 auto;
 
   background-color: #ffffff;
   color: #2a260f;
@@ -38,6 +41,7 @@
   justify-items: center;
 
   margin: 1rem auto 0 auto;
+  padding: 0 0.5rem;
 }
 
 .recipes .recipe {
