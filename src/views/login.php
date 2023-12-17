@@ -11,7 +11,9 @@ require_once __DIR__ . '/components/head.php';
 ?>
 
 <title>Login</title>
+
 <link rel="stylesheet" href="<?= urlBuilder($GLOBALS["PREFIX"], "public/styles/entry-page.css") ?>">
+<link rel="stylesheet" href="<?= urlBuilder($GLOBALS["PREFIX"], "public/styles/form-component.css") ?>">
 </head>
 
 <body>
