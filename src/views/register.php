@@ -32,7 +32,7 @@ require_once __DIR__ . '/components/head.php';
       </form>
     </section>
   </main>
-  <script src="<?= urlBuilder($GLOBALS["PREFIX"], "public/scripts/register-page.js") ?>"></script>
+  <script type="module" src="<?= urlBuilder($GLOBALS["PREFIX"], "public/scripts/register-page.js") ?>"></script>
 </body>
 
 </html>

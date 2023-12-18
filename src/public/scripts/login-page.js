@@ -1,4 +1,4 @@
-import { postData } from "./common/post-data.js";
+import { sendData } from "./common/send-data.js";
 
 window.onload = () => {
   const form = document.getElementById("login");
@@ -22,9 +22,13 @@ window.onload = () => {
       return;
     }
 
-    void postData(`${prefix.value ? `/${prefix.value}/` : ""}/admin/login`, {
-      password: password.value,
-    }).then((response) => {
+    void sendData(
+      "POST",
+      `${prefix.value ? `/${prefix.value}/` : ""}/admin/login`,
+      {
+        password: password.value,
+      }
+    ).then((response) => {
       if (response.code !== 200) errorField.innerText = response.data.message;
       else location.reload();
     });

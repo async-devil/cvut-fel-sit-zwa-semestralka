@@ -1,11 +1,12 @@
 /**
+ * @param {String} method
  * @param {String} url
  * @param {Object} dto
  */
-export async function postData(url, dto) {
+export async function sendData(method, url, dto) {
   try {
     const response = await fetch(url, {
-      method: "POST",
+      method,
       headers: {
         "Content-Type": "application/json",
       },

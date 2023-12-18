@@ -30,7 +30,6 @@ require_once __DIR__ . '/components/head.php';
       </form>
     </section>
   </main>
-  <!-- <script type="module" src="<?= urlBuilder($GLOBALS["PREFIX"], "public/scripts/common/post-data.js") ?>"></script> -->
   <script type="module" src="<?= urlBuilder($GLOBALS["PREFIX"], "public/scripts/login-page.js") ?>"></script>
 </body>
 
