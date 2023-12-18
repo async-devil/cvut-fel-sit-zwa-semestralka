@@ -28,12 +28,7 @@ require_once __DIR__ . '/components/head.php';
     </section>
     <section class="recipe">
       <a href="<?= $recipe->source ?>">Original recipe</a>
-      <?php foreach ($recipe->sections as $section) : ?>
-        <article>
-          <h2><?= $section["name"] ?></h2>
-          <p><?= $section["content"] ?></p>
-        </article>
-      <?php endforeach ?>
+      <?= html_entity_decode(htmlspecialchars_decode($recipe->content)) ?>
     </section>
   </main>
 </body>

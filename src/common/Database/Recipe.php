@@ -19,28 +19,37 @@ class Recipe
   public string $previewImage;
   public string $source;
   public string $tag;
-  public array $sections;
+  public string $content;
 
 
   public function __construct(bool | array $data = false, $setId = false)
   {
     if ($setId) $data["id"] = Database::uuidv4();
-    if ($data) return $this->set($data);
-
-    $this->id = Database::uuidv4();
+    if ($data) $this->set($data);
   }
 
-  private function set(array $data)
+  public function set(array $data)
   {
-    foreach ($data as $key => $value) $this->{$key} = $value;
+    Recipe::validateSchema($data);
+
+    $this->id = $data["id"];
+    $this->name = htmlspecialchars($data["name"]);
+    $this->description = htmlspecialchars($data["description"]);
+    $this->previewImage = htmlspecialchars($data["previewImage"]);
+    $this->source = htmlspecialchars($data["source"]);
+    $this->tag = htmlspecialchars($data["tag"]);
+    $this->content = htmlspecialchars($data["content"]);
   }
 
-  public static function validateSchema(Recipe $schema)
+  public static function validateSchema(array $schema)
   {
-    Validator::isString($schema->name, "name");
-    Validator::isString($schema->description, "description");
-    Validator::isString($schema->previewImage, "previewImage");
-    Validator::isString($schema->source, "source");
-    Validator::isString($schema->tag, "tag");
+    Validator::isString($schema["name"] ?? null, "name");
+    Validator::isString($schema["description"] ?? null, "description");
+    Validator::isString($schema["previewImage"] ?? null, "previewImage");
+    Validator::isString($schema["source"] ?? null, "source");
+    Validator::isString($schema["tag"] ?? null, "tag");
+    Validator::isString($schema["content"] ?? null, "content");
   }
+
+  public static $sampleData = ["name" => "Sample recipe", "description" => "This is sample recipe", "previewImage" => "https://placehold.co/600x400", "source" => "https://google.com", "tag" => "none", "content" => "<h2>Ingredients</h2><p>None</p><h2>Instructions</h2><p>None</p>"];
 }
