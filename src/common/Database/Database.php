@@ -71,11 +71,37 @@ class Database
     });
   }
 
+  public function paginateData(array $data, int $offset, int $count = null): array
+  {
+    $copy = $data;
+    array_splice($copy, 0, $offset);
+
+    return array_splice($data, 0, is_null($count) ? count($copy) : $count);
+  }
+
   public function createRecipe(array $data): Recipe
   {
     $recipe = new Recipe($data, true);
 
-    array_push($this->data, new Recipe($data, true));
+    array_push($this->data, $recipe);
+    $this->putData();
+
+    return $recipe;
+  }
+
+  public function updateRecipe(string $id, array $data): Recipe
+  {
+    $recipe = $this->getRecipeById($id);
+
+    $data["id"] = $recipe->id;
+    $recipe->set($data);
+
+    for ($i = 0; $i < count($this->data); $i += 1) {
+      if ($this->data[$i]["id"] == $id) {
+        $this->data[$i] = $recipe;
+      }
+    }
+
     $this->putData();
 
     return $recipe;

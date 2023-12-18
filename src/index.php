@@ -36,7 +36,7 @@ $router->get("/", function (Request $request, Response $response) {
   $response->renderPage("home");
 });
 
-function adminPageGuard(Request $request, Response $response)
+function adminPageGuard(Response $response)
 {
   global $authenticator;
 
@@ -44,8 +44,15 @@ function adminPageGuard(Request $request, Response $response)
   else if (!$authenticator->isLoggedIn()) die($response->renderPage("login", []));
 }
 
+function adminRouteGuard()
+{
+  global $authenticator;
+
+  if (!$authenticator->isLoggedIn()) HTTPException::sendException(401, "Unauthorized");
+}
+
 $router->get("/admin", function (Request $request, Response $response) {
-  adminPageGuard($request, $response);
+  adminPageGuard($response);
 
   return $response->renderPage("admin", []);
 });
@@ -74,6 +81,26 @@ $router->post("/admin/register", function (Request $request, Response $response)
   HTTPException::sendException(200, "Success");
 });
 
+$router->get("/admin/recipes/:id", function (Request $request, Response $response) {
+  adminPageGuard($response);
+
+  global $database;
+
+  $id = $request->parameters->id;
+
+  if ($id === "new") {
+    return $response->renderPage("operate-recipe", ["operation" => "create", "recipe" => new Recipe(Recipe::$sampleData, true)]);
+  }
+
+  try {
+    $recipe = $database->getRecipeById($id);
+
+    return $response->renderPage("operate-recipe", ["operation" => "update", "recipe" => $recipe]);
+  } catch (Exception $exception) {
+    return $response->renderPage("404", ["uri" => $request->URI]);
+  }
+});
+
 $router->get("/recipes/:id", function (Request $request, Response $response) {
   global $database;
 
@@ -98,6 +125,8 @@ $router->get("/recipes/catalog/:tag", function (Request $request, Response $resp
 });
 
 $router->post("/recipes", function (Request $request, Response $response) {
+  adminRouteGuard();
+
   global $database;
 
   $recipe = $database->createRecipe($request->body);
@@ -106,6 +135,20 @@ $router->post("/recipes", function (Request $request, Response $response) {
   header("Content-type: application/json; charset=utf-8");
 
   echo json_encode($recipe);
+});
+
+$router->put("/recipes/:id", function (Request $request, Response $response) {
+  adminRouteGuard();
+
+  global $database;
+
+  try {
+    $database->updateRecipe($request->parameters->id, $request->body);
+
+    return HTTPException::sendException(200, "Success");
+  } catch (Exception $exception) {
+    HTTPException::sendException(404, "Recipe not found");
+  }
 });
 
 $router->start();
