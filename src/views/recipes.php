@@ -18,7 +18,7 @@ require_once __DIR__ . '/components/head.php';
   <?php require_once __DIR__ . "/components/header.php"; ?>
   <main>
     <h1><?= ucfirst($tag) ?> recipes</h1>
-    <nav class="tags">
+    <nav class="body-nav tags">
       <p>Tags:</p>
       <ul>
         <li><a href="<?= urlBuilder($GLOBALS["PREFIX"], "recipes/catalog/all") ?>">All</a></li>
@@ -27,6 +27,14 @@ require_once __DIR__ . '/components/head.php';
         <li><a href="<?= urlBuilder($GLOBALS["PREFIX"], "recipes/catalog/meat") ?>">Meat</a></li>
         <li><a href="<?= urlBuilder($GLOBALS["PREFIX"], "recipes/catalog/soup") ?>">Soup</a></li>
         <li><a href="<?= urlBuilder($GLOBALS["PREFIX"], "recipes/catalog/dessert") ?>">Dessert</a></li>
+      </ul>
+    </nav>
+    <nav class="body-nav pages">
+      <p>Pages:</p>
+      <ul>
+        <?php for ($i = 1; $i <= $pagesCount; $i += 1) : ?>
+          <li><a href="<?= urlBuilder($GLOBALS["PREFIX"], "recipes/catalog/{$tag}/pages/{$i}") ?>"><?= $i ?></a></li>
+        <?php endfor ?>
       </ul>
     </nav>
     <section class="recipes">

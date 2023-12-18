@@ -1,4 +1,4 @@
-.tags {
+.body-nav {
   max-width: 1000px;
 
   display: flex;
@@ -7,17 +7,19 @@
   padding: 1rem;
   margin: 0 auto;
 
+  border-top: 1px solid #2a260f;
+
   background-color: #ffffff;
   color: #2a260f;
 }
 
-.tags p {
+.body-nav p {
   margin: 0;
 
   font-weight: bold;
 }
 
-.tags ul {
+.body-nav ul {
   display: flex;
   gap: 1rem;
 
@@ -27,7 +29,7 @@
   list-style-type: none;
 }
 
-.tags ul a:hover {
+.body-nav ul a:hover {
   text-decoration: underline;
 }
 

@@ -116,12 +116,24 @@ $router->get("/recipes/catalog/:tag", function (Request $request, Response $resp
   global $database;
 
   $tag = $request->parameters->tag;
+  $page = 0;
 
-  if ($tag === "all") {
-    return $response->renderPage("recipes", ["recipes" => $database->data, "tag" => $tag]);
-  }
+  $recipes = $tag === "all" ? $database->data : $database->getRecipesByTag($tag);
+  $pagesCount = ceil(count($recipes) / 6);
 
-  return $response->renderPage("recipes", ["recipes" => $database->getRecipesByTag($tag, 5), "tag" => $tag]);
+  return $response->renderPage("recipes", ["recipes" => $database->paginateData($recipes, $page * 6, 6), "tag" => $tag, "pagesCount" => $pagesCount]);
+});
+
+$router->get("/recipes/catalog/:tag/pages/:page", function (Request $request, Response $response) {
+  global $database;
+
+  $tag = $request->parameters->tag;
+  $page = intval($request->parameters->page) - 1;
+
+  $recipes = $tag === "all" ? $database->data : $database->getRecipesByTag($tag);
+  $pagesCount = ceil(count($recipes) / 6);
+
+  return $response->renderPage("recipes", ["recipes" => $database->paginateData($recipes, $page * 6, 6), "tag" => $tag, "pagesCount" => $pagesCount]);
 });
 
 $router->post("/recipes", function (Request $request, Response $response) {
