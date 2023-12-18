@@ -76,7 +76,7 @@ class Database
     $copy = $data;
     array_splice($copy, 0, $offset);
 
-    return array_splice($data, 0, is_null($count) ? count($copy) : $count);
+    return array_splice($copy, 0, is_null($count) ? count($copy) : $count);
   }
 
   public function createRecipe(array $data): Recipe
