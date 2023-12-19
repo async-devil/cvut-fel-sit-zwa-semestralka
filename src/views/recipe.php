@@ -10,7 +10,7 @@ use function App\urlBuilder;
 require_once __DIR__ . '/components/head.php';
 ?>
 
-<title><?= $recipe->name ?></title>
+<title><?= htmlspecialchars($recipe->name) ?></title>
 <link rel="stylesheet" href="<?= urlBuilder($GLOBALS["PREFIX"], "public/styles/recipe-page.css") ?>">
 </head>
 
@@ -20,15 +20,15 @@ require_once __DIR__ . '/components/head.php';
     <section class="preview">
       <div class="preview__text">
         <div class="preview__text_wrapper">
-          <h1><?= $recipe->name ?></h1>
-          <p><?= $recipe->description ?></p>
+          <h1><?= htmlspecialchars($recipe->name) ?></h1>
+          <p><?= htmlspecialchars($recipe->description) ?></p>
         </div>
       </div>
-      <div class="preview__image"><img src="<?= $recipe->previewImage ?>" alt="Recipe preview image"></div>
+      <div class="preview__image"><img src="<?= htmlspecialchars($recipe->previewImage) ?>" alt="Recipe preview image"></div>
     </section>
     <section class="recipe">
-      <a href="<?= $recipe->source ?>">Original recipe</a>
-      <?= html_entity_decode(htmlspecialchars_decode($recipe->content)) ?>
+      <a href="<?= htmlspecialchars($recipe->source) ?>">Original recipe</a>
+      <?= $recipe->content ?>
     </section>
   </main>
 </body>

@@ -33,12 +33,12 @@ class Recipe
     Recipe::validateSchema($data);
 
     $this->id = $data["id"];
-    $this->name = htmlspecialchars($data["name"]);
-    $this->description = htmlspecialchars($data["description"]);
-    $this->previewImage = htmlspecialchars($data["previewImage"]);
-    $this->source = htmlspecialchars($data["source"]);
-    $this->tag = htmlspecialchars($data["tag"]);
-    $this->content = htmlspecialchars($data["content"]);
+    $this->name = $data["name"];
+    $this->description = $data["description"];
+    $this->previewImage = $data["previewImage"];
+    $this->source = $data["source"];
+    $this->tag = $data["tag"];
+    $this->content = $data["content"];
   }
 
   public static function validateSchema(array $schema)

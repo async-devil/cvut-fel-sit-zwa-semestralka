@@ -17,7 +17,18 @@ require_once __DIR__ . '/components/head.php';
 <body>
   <?php require_once __DIR__ . "/components/header.php"; ?>
   <main>
-    Admin
+    <section>
+      <div class="panel">
+        <a href="<?= urlBuilder($GLOBALS["PREFIX"], "admin/recipes/new") ?>">Create new recipe</a>
+      </div>
+      <div class="panel">
+        <form action="<?= urlBuilder($GLOBALS["PREFIX"], "admin/upload-file") ?>" method="post" enctype="multipart/form-data">
+          <label for="file">Select file to upload:</label>
+          <input type="file" name="file" id="file" required>
+          <input type="submit" value="Upload file" name="submit">
+        </form>
+      </div>
+    </section>
   </main>
 </body>
 

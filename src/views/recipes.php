@@ -42,8 +42,8 @@ require_once __DIR__ . '/components/head.php';
         <article class="recipe">
           <a href="<?= urlBuilder($GLOBALS["PREFIX"], "recipes/{$recipe["id"]}") ?>"></a>
           <div class="wrapper">
-            <h2><?= $recipe["name"] ?></h2>
-            <p><?= $recipe["description"] ?></p>
+            <h2><?= htmlspecialchars($recipe["name"]) ?></h2>
+            <p><?= htmlspecialchars($recipe["description"]) ?></p>
           </div>
         </article>
       <?php endforeach ?>

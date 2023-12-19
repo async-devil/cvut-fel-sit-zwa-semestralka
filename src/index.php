@@ -81,6 +81,21 @@ $router->post("/admin/register", function (Request $request, Response $response)
   HTTPException::sendException(200, "Success");
 });
 
+$router->post("/admin/upload-file", function (Request $request, Response $response) {
+  $uploadsDirectory = __DIR__ . "/public/assets/uploads";
+  $file = $_FILES["file"];
+  $fileUploadPath = $uploadsDirectory . "/" . $file["name"];
+
+  function redirectToFile(mixed $file)
+  {
+    header('Location: ' . urlBuilder($GLOBALS["PREFIX"], "public/assets/uploads", $file["name"]), true, 303);
+    die();
+  }
+
+  if (file_exists($fileUploadPath)) redirectToFile($file);
+  if (move_uploaded_file($_FILES["file"]["tmp_name"], $fileUploadPath)) redirectToFile($file);
+});
+
 $router->get("/admin/recipes/:id", function (Request $request, Response $response) {
   adminPageGuard($response);
 
@@ -149,7 +164,7 @@ $router->post("/recipes", function (Request $request, Response $response) {
   echo json_encode($recipe);
 });
 
-$router->put("/recipes/:id", function (Request $request, Response $response) {
+$router->post("/recipes/update/:id", function (Request $request, Response $response) {
   adminRouteGuard();
 
   global $database;
