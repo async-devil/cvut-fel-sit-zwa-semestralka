@@ -24,7 +24,7 @@ window.onload = () => {
 
     void sendData(
       "POST",
-      `${prefix.value ? `/${prefix.value}/` : ""}/admin/login`,
+      `${prefix.value ? `/${prefix.value}` : ""}/admin/login`,
       {
         password: password.value,
       }

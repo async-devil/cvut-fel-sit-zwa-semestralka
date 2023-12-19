@@ -53,8 +53,8 @@ window.onload = () => {
       });
     } else if (operation.value === "update") {
       return void sendData(
-        "PUT",
-        `${prefix.value ? `/${prefix.value}/` : ""}/recipes/${id.value}`,
+        "POST",
+        `${prefix.value ? `/${prefix.value}` : ""}/recipes/update/${id.value}`,
         {
           name: name.value,
           description: description.value,
@@ -66,7 +66,7 @@ window.onload = () => {
       ).then((response) => {
         if (response.code !== 200) errorField.innerText = response.data.message;
         else
-          location.href = `${prefix.value ? `/${prefix.value}/` : ""}/recipes/${
+          location.href = `${prefix.value ? `/${prefix.value}` : ""}/recipes/${
             id.value
           }`;
       });

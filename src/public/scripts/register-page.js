@@ -33,7 +33,7 @@ window.onload = () => {
 
     void sendData(
       "POST",
-      `${prefix.value ? `/${prefix.value}/` : ""}/admin/register`,
+      `${prefix.value ? `/${prefix.value}` : ""}/admin/register`,
       {
         password: password.value,
       }
