@@ -45,3 +45,10 @@ header ul a:hover {
 main > h1 {
   text-align: center;
 }
+
+@media print {
+  header,
+  nav {
+    display: none !important;
+  }
+}
