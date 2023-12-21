@@ -28,6 +28,9 @@ class Recipe
     if ($data) $this->set($data);
   }
 
+  /**
+   * validate schema and set values
+   */
   public function set(array $data)
   {
     Recipe::validateSchema($data);
@@ -41,6 +44,9 @@ class Recipe
     $this->content = $data["content"];
   }
 
+  /**
+   * validate all recipe fields except id
+   */
   public static function validateSchema(array $schema)
   {
     Validator::isString($schema["name"] ?? null, "name");

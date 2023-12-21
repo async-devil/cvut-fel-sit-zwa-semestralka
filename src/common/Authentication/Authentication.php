@@ -22,28 +22,40 @@ class Authentication
     session_start();
   }
 
-  private function createCredentialsFileIfAbsent()
+  private function createCredentialsFileIfAbsent(): void
   {
     if (!file_exists(Authentication::CREDENTIALS_FILE)) {
       file_put_contents(Authentication::CREDENTIALS_FILE, "");
     }
   }
 
+  /**
+   * read password hash from credentials.env, if absent, set to adminPasswordHash field null
+   */
   private function getAdminCredential(): void
   {
     $this->adminPasswordHash = parse_ini_file(__DIR__ . "/credentials.env")["ADMIN_PASSWORD_HASH"] ?? null;
   }
 
+  /**
+   * reset password hash to credentials.env
+   */
   private function setAdminCredential(): void
   {
     file_put_contents(Authentication::CREDENTIALS_FILE, "ADMIN_PASSWORD_HASH='{$this->adminPasswordHash}'");
   }
 
+  /**
+   * check if password is set
+   */
   public function isNeedInit(): bool
   {
     return is_null($this->adminPasswordHash);
   }
 
+  /**
+   * hash password and puts it into credentials.env file
+   */
   private function setPassword(string $password): void
   {
     $this->adminPasswordHash = password_hash($password, PASSWORD_DEFAULT);
@@ -52,6 +64,9 @@ class Authentication
     $this->getAdminCredential();
   }
 
+  /**
+   * set password and "loggedIn" session field to true
+   */
   public function register(string $password): void
   {
     $this->setPassword($password);
@@ -59,6 +74,10 @@ class Authentication
     $_SESSION["loggedIn"] = true;
   }
 
+  /**
+   * On invalid password die with 401 http code,
+   * on valid, set "loggedIn" session field to true
+   */
   public function logIn(string $password): void
   {
     if (!password_verify($password, $this->adminPasswordHash)) {
@@ -68,6 +87,9 @@ class Authentication
     $_SESSION["loggedIn"] = true;
   }
 
+  /**
+   * destroy session
+   */
   public function logOut(): void
   {
     session_unset();

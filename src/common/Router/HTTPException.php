@@ -16,11 +16,17 @@ class HTTPException extends Exception
     $this->message = $message;
   }
 
+  /**
+   * return json string of object with fields code and message
+   */
   public function toJSON(): string
   {
     return json_encode(array("code" => $this->code, "message" => $this->message));
   }
 
+  /**
+   * die sending json error response
+   */
   public static function sendException(int $code = 500, string $message = ""): void
   {
     $exception = new HTTPException($code, $message);

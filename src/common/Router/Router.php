@@ -51,36 +51,68 @@ class Router
     $this->requestURISubPaths = explode("/", $parsedURI);
   }
 
+  /**
+   * handle POST request
+   * @param string $path path on which request must be handled
+   * @param callable<Request, Response> $handler function which will be executed
+   */
   public function post(string $path, callable $handler)
   {
     return $this->registerRoute(Methods::POST, $path, $handler);
   }
 
+  /**
+   * handle GET request
+   * @param string $path path on which request must be handled
+   * @param callable<Request, Response> $handler function which will be executed
+   */
   public function get(string $path, callable $handler)
   {
     return $this->registerRoute(Methods::GET, $path, $handler);
   }
 
+  /**
+   * handle PUT request
+   * @param string $path path on which request must be handled
+   * @param callable<Request, Response> $handler function which will be executed
+   */
   public function put(string $path, callable $handler)
   {
     return $this->registerRoute(Methods::PUT, $path, $handler);
   }
 
+  /**
+   * handle DELETE request
+   * @param string $path path on which request must be handled
+   * @param callable<Request, Response> $handler function which will be executed
+   */
   public function delete(string $path, callable $handler)
   {
     return $this->registerRoute(Methods::DELETE, $path, $handler);
   }
 
+  /**
+   * handle not found page
+   */
   public function notFound(callable $handler)
   {
     $this->notFoundHandler = $handler;
   }
 
+  /**
+   * trim URI from /
+   */
   private function trimURI(string $uri): string
   {
     return preg_replace(self::TRIM_REGEXP, "", $uri);
   }
 
+  /**
+   * match pattern parameter sub paths to request sub paths
+   * @param array<string> $patternURISubPaths ["users", ":id", "update"]
+   * @param array<string> $requestURISubPaths ["users", "a2e-a65-2ab", "update"]
+   * @return object {id: "a2e-a65-2ab"}
+   */
   private function getParameterValuesFromURI(array $patternURISubPaths, array $requestURISubPaths): object
   {
     $parametersDictionary = array();
@@ -95,6 +127,11 @@ class Router
     return (object)$parametersDictionary;
   }
 
+  /**
+   * @param Methods $method HTTP request method
+   * @param string $path path on which request must be handled
+   * @param callable<Request, Response> $handler function which will be executed
+   */
   private function registerRoute(Methods $method, string $path, callable $handler): void
   {
     if ($this->isMatched) return;
@@ -120,6 +157,9 @@ class Router
     }
   }
 
+  /**
+   * start listening handled routes
+   */
   public function start()
   {
     if (!$this->isMatched) {

@@ -10,11 +10,20 @@ class Response
 {
   private string $viewsDir = __DIR__ . "/../../views";
 
+  /**
+   * @param string $name page name
+   * @return string page path
+   */
   public function getPage(string $name): string
   {
     return $this->viewsDir . '/' . $name . '.php';
   }
 
+  /**
+   * include selected page pass parameters to it
+   * @param string $name page name
+   * @param array $exportParameters parameters, that will be passed to rendered page
+   */
   public function renderPage(string $name, array $exportParameters = array()): void
   {
     $pageToRender = $this->getPage($name);

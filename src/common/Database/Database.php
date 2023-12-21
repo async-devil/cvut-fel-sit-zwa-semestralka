@@ -21,6 +21,9 @@ class Database
     $this->readData();
   }
 
+  /**
+   * generate uuid-v4
+   */
   static public function uuidv4(): string
   {
 
@@ -32,23 +35,32 @@ class Database
     return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
   }
 
-  private function createDatabaseFileIfAbsent()
+  private function createDatabaseFileIfAbsent(): void
   {
     if (!file_exists(Database::DB_FILE)) {
       file_put_contents(Database::DB_FILE, "[]");
     }
   }
 
+  /**
+   * decode database.json and set data field
+   */
   private function readData(): void
   {
     $this->data = json_decode(file_get_contents(Database::DB_FILE), true);
   }
 
+  /**
+   * reset database.json with data field value
+   */
   private function putData(): void
   {
     file_put_contents(Database::DB_FILE, json_encode($this->data));
   }
 
+  /**
+   * @throws Exception if recipe not found
+   */
   public function getRecipeById(string $id): Recipe
   {
     $this->readData();
@@ -62,6 +74,9 @@ class Database
     throw new Exception("Not found");
   }
 
+  /**
+   * filter recipes by tag
+   */
   public function getRecipesByTag(string $tag)
   {
     $this->readData();
@@ -71,6 +86,10 @@ class Database
     });
   }
 
+  /**
+   * return $count values with offset of $offset from $data
+   * @param int|null $count if null return all values
+   */
   public function paginateData(array $data, int $offset, int $count = null): array
   {
     $copy = $data;
@@ -79,6 +98,9 @@ class Database
     return array_splice($copy, 0, is_null($count) ? count($copy) : $count);
   }
 
+  /**
+   * create recipe, push to data field and return
+   */
   public function createRecipe(array $data): Recipe
   {
     $recipe = new Recipe($data, true);
@@ -89,6 +111,9 @@ class Database
     return $recipe;
   }
 
+  /**
+   * update recipe, update it in data field and return updated
+   */
   public function updateRecipe(string $id, array $data): Recipe
   {
     $recipe = $this->getRecipeById($id);
