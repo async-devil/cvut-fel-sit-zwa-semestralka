@@ -24,7 +24,7 @@ require_once __DIR__ . '/components/head.php';
       <form id="login">
         <input type="hidden" id="prefix" name="prefix" value="<?= $GLOBALS["PREFIX"] ?>">
         <label for="password">Enter your password:</label>
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password" placeholder="Required" required>
         <input type="submit" value="Submit">
         <p id="errorField"></p>
       </form>

@@ -26,22 +26,22 @@ require_once __DIR__ . '/components/head.php';
         <input type="hidden" id="id" name="id" value="<?= $recipe->id ?? "none" ?>">
 
         <label for="name">Enter recipe name:</label>
-        <input type="text" id="name" name="name" value="<?= $recipe->name ?>" required>
+        <input type="text" id="name" name="name" value="<?= $recipe->name ?>" placeholder="Required" required>
 
         <label for="description">Enter recipe description:</label>
-        <textarea name="description" id="description" cols="30" rows="10" required><?= $recipe->description ?></textarea>
+        <textarea name="description" id="description" cols="30" rows="10" placeholder="Required" required><?= $recipe->description ?></textarea>
 
         <label for="source">Enter recipe source link:</label>
-        <input type="url" id="source" name="source" value="<?= $recipe->source ?>" required>
+        <input type="url" id="source" name="source" value="<?= $recipe->source ?>" placeholder="Required" required>
 
         <label for="previewImage">Enter recipe preview image link:</label>
-        <input type="url" id="previewImage" name="previewImage" value="<?= $recipe->previewImage ?>" required>
+        <input type="url" id="previewImage" name="previewImage" value="<?= $recipe->previewImage ?>" placeholder="Required" required>
 
         <label for="tag">Enter recipe tag:</label>
-        <input type="text" id="tag" name="tag" value="<?= $recipe->tag ?>" required>
+        <input type="text" id="tag" name="tag" value="<?= $recipe->tag ?>" placeholder="Required" required>
 
         <label for="content">Enter recipe content:</label>
-        <textarea name="content" id="content" cols="30" rows="10" required><?= $recipe->content ?></textarea>
+        <textarea name="content" id="content" cols="30" rows="10" placeholder="Required" required><?= $recipe->content ?></textarea>
 
         <input type="submit" value="Submit">
         <p id="errorField"></p>
