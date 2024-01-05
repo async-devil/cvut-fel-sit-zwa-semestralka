@@ -59,6 +59,12 @@
   padding: 0 1rem;
 }
 
+.recipe nav {
+  display: flex;
+
+  gap: 1rem;
+}
+
 .recipe a {
   text-decoration: underline;
 }

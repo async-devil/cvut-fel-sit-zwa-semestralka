@@ -27,7 +27,10 @@ require_once __DIR__ . '/components/head.php';
       <div class="preview__image"><img src="<?= htmlspecialchars($recipe->previewImage) ?>" alt="Recipe preview image"></div>
     </section>
     <section class="recipe">
-      <a href="<?= htmlspecialchars($recipe->source) ?>">Original recipe</a>
+      <nav>
+        <a href="<?= htmlspecialchars($recipe->source) ?>">Original recipe</a>
+        <a href="<?= urlBuilder($GLOBALS["PREFIX"], "admin/recipes", $recipe->id) ?>">Update recipe</a>
+      </nav>
       <?= $recipe->content ?>
     </section>
   </main>
